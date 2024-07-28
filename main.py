@@ -1,23 +1,29 @@
 import nmap
-import json
+from socket import gethostbyname, gethostname
 from sql_control import SQLQuery, sql_connection_stack
 
+LOCAL_IP = gethostbyname(gethostname())
 
 # New Instance Of Nmap Class
 scanner = nmap.PortScanner()
 
-# ICMP Ping scan
+query_set = SQLQuery('network_layout_dev_001')
+stack = [query_set.create_dataset()]
+
+# Nmap Scan to determine all network data
 result = scanner.scan('192.168.10.0/24', arguments='-sn -T5')
 
-print(result)
+for host in result['scan']:
+    if host == LOCAL_IP:    # This section skip local address to not raise error code xD
+        continue
+    stack.append(
+        query_set.entry_add_dataset(
+            result['scan'][host]['addresses']['mac'], 
+            result['scan'][host]['addresses']['ipv4']
+        )
+    )
 
-# for host in result['scan']:
-#     print(f'Host {}')
-
-# Temp place for command above    
-# result['scan'][host]['addresses']
-
-
+sql_connection_stack(stack)
 
 # # Debug SCAN to JSON
 # file = open('wyniki.csv', 'w')

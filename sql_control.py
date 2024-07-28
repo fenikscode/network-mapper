@@ -42,10 +42,10 @@ class SQLQuery():
         """
         return entry_template
 
-# Queries are send to MySQL in STACK - a tuple containing many commands
+# Queries are send to MySQL in STACK - a list containing many commands
 # Send one by one to server to save on time
 
-def sql_connection_stack(query_stack :tuple):
+def sql_connection_stack(query_stack :list):
     
     connection, cursor = sql_connection_start()
     
@@ -71,6 +71,8 @@ def sql_connection_start():
     # Sending any error to terminal
     except mc.Error as e:
         print(e.msg)
+        print(HOST)
+        exit()
 
     else:
         return connection, cursor
