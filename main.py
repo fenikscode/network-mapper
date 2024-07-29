@@ -6,6 +6,7 @@ from sql_control import SQLQuery, sql_connection_stack
 
 LOCAL_IP = gethostbyname(gethostname())
 
+# Create debug random seed for development
 seed(urandom(10))
 
 # New Instance Of Nmap Class
@@ -20,10 +21,32 @@ result = scanner.scan('192.168.10.0/24', arguments='-sn -T5')
 for host in result['scan']:
     if host == LOCAL_IP:    # This section skip local address to not raise error code xD
         continue
+    
+    # print(result['scan'][host]['vendor'])     # DEBUG scan result
+    
+    _mac = result['scan'][host]['addresses']['mac']
+    _ip = result['scan'][host]['addresses']['ipv4']
+    _hostname = result['scan'][host]['hostnames'][0]['name']
+    _status = result['scan'][host]['status']['state']
+    
+    if bool(result['scan'][host]['vendor']):
+        _friend = result['scan'][host]['vendor'][_mac]
+    
+    # This translate status to bool typ
+    if _status == 'up':
+        _status = True
+    else:
+        _status = False
+    
+    # Appending all task to STACK
     stack.append(
         query_set.entry_add_dataset(
-            result['scan'][host]['addresses']['mac'], 
-            result['scan'][host]['addresses']['ipv4']
+            _mac,
+            _ip,
+            _hostname,
+            _friend,
+            None,
+            _status
         )
     )
 

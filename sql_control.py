@@ -25,7 +25,7 @@ class SQLQuery():
             ) ENGINE=InnoDB""".format(self.dataset_name)
         return setup_template
     # Network Layout Adding Entries
-    def entry_add_dataset(self, _MAC_ADDRESS, _IP_ADDRESS, _HOSTNAME=None, _FRIENDLY_NAME=None, _OS_NAME=None, _IS_UP=False):
+    def entry_add_dataset(self, _MAC_ADDRESS, _IP_ADDRESS, _HOSTNAME, _FRIENDLY_NAME, _OS_NAME, _IS_UP=False):
         entry_template = f"""
             INSERT INTO `{self.dataset_name}` (
                 `MACAddress`,
