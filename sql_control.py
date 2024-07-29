@@ -1,5 +1,8 @@
 import mysql.connector as mc
+from dotenv import load_dotenv
 from os import getenv
+
+load_dotenv()
 
 HOST=getenv('HOST')
 USERNAME=getenv('USERNAME')
@@ -32,12 +35,12 @@ class SQLQuery():
                 `OSName`,
                 `IsUp`
             ) VALUES (
-                {_MAC_ADDRESS},
-                {_IP_ADDRESS},
-                {_HOSTNAME},
-                {_FRIENDLY_NAME},
-                {_OS_NAME},
-                {_IS_UP}
+                '{_MAC_ADDRESS}',
+                '{_IP_ADDRESS}',
+                '{_HOSTNAME}',
+                '{_FRIENDLY_NAME}',
+                '{_OS_NAME}',
+                {int(_IS_UP)}
             )
         """
         return entry_template
@@ -52,7 +55,9 @@ def sql_connection_stack(query_stack :list):
     # This loop goes through all task store in STACK
     # And executes them on server
     for task in query_stack:
+        print(f'CURRENT TASK - {task}')     # DEBUG LOG
         cursor.execute(task)
+        print(f'TASK COMPLETED - {task}')   # DEBUG LOG
         connection.commit()
     connection.close()
 

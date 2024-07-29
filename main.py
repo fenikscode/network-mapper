@@ -1,13 +1,17 @@
 import nmap
+from random import seed, randint
+from os import urandom
 from socket import gethostbyname, gethostname
 from sql_control import SQLQuery, sql_connection_stack
 
 LOCAL_IP = gethostbyname(gethostname())
 
+seed(urandom(10))
+
 # New Instance Of Nmap Class
 scanner = nmap.PortScanner()
 
-query_set = SQLQuery('network_layout_dev_001')
+query_set = SQLQuery(f'network_layout_dev_{randint(0, 9999999)}')
 stack = [query_set.create_dataset()]
 
 # Nmap Scan to determine all network data
